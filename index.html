@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>QCM — CSS display</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #F5F2EC;
+  --surface: #FFFFFF;
+  --surface2: #F0EDE6;
+  --border: #DDD9D0;
+  --text: #1C1915;
+  --muted: #8A8479;
+  --accent: #2B4FD4;
+  --accent-light: #EBF0FF;
+  --green: #1A6B45;
+  --green-light: #E3F5EC;
+  --red: #991B1B;
+  --red-light: #FEE8E8;
+  --amber: #854F0B;
+  --amber-light: #FEF3E2;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.page { max-width: 700px; margin: 0 auto; }
+
+/* HEADER */
+.site-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-top: 1rem;
+}
+.site-header .eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.site-header h1 {
+  font-family: var(--serif);
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.site-header h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.site-header p {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* CARD */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* IDENTIFICATION */
+.id-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-family: var(--mono);
+}
+.field input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color .15s, box-shadow .15s;
+  outline: none;
+}
+.field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43,79,212,0.1);
+}
+.field input.err { border-color: var(--red); }
+
+.err-msg {
+  font-size: 12px; color: var(--red);
+  margin-top: 4px; display: none;
+}
+.err-msg.show { display: block; }
+
+.btn-start {
+  width: 100%; padding: 14px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 600;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  margin-top: .5rem;
+  letter-spacing: .01em;
+}
+.btn-start:hover { background: #1F3CB5; }
+.btn-start:active { transform: scale(.98); }
+
+/* PROGRESS */
+.progress-wrap { margin-bottom: 1.75rem; }
+.progress-meta {
+  display: flex; justify-content: space-between;
+  font-size: 12px; font-family: var(--mono);
+  color: var(--muted); margin-bottom: 8px;
+}
+.progress-track {
+  height: 4px; background: var(--border); border-radius: 2px;
+}
+.progress-fill {
+  height: 4px; background: var(--accent); border-radius: 2px;
+  transition: width .4s cubic-bezier(.4,0,.2,1);
+}
+
+/* QUESTION */
+.q-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.q-tag {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--muted); text-transform: uppercase; letter-spacing: .07em;
+}
+.notion-tag {
+  font-family: var(--mono); font-size: 11px;
+  background: var(--accent-light); color: var(--accent);
+  padding: 3px 10px; border-radius: 20px;
+}
+.q-text {
+  font-size: 16px; font-weight: 500;
+  color: var(--text); margin-bottom: 1.25rem;
+  line-height: 1.55;
+}
+.code-block {
+  font-family: var(--mono); font-size: 12.5px;
+  background: #1C1915; color: #E8E4DC;
+  border-radius: 10px; padding: 14px 18px;
+  margin-bottom: 1.25rem; line-height: 1.9;
+  overflow-x: auto;
+}
+.kw { color: #9D8FF0; }
+.val { color: #63D4A8; }
+.cmt { color: #57524A; }
+.str { color: #F0B863; }
+
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: var(--sans);
+  text-align: left;
+  transition: border-color .15s, background .15s;
+}
+.opt:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.opt:disabled { cursor: default; }
+.opt .letter {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  width: 24px; height: 24px; border-radius: 6px;
+  background: var(--border); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background .15s, color .15s;
+}
+.opt.correct { background: var(--green-light); border-color: #5DCAA5; color: var(--green); }
+.opt.correct .letter { background: #5DCAA5; color: #04342C; }
+.opt.wrong { background: var(--red-light); border-color: #F09595; color: var(--red); }
+.opt.wrong .letter { background: #F09595; color: var(--red); }
+.opt.reveal { background: var(--green-light); border-color: #5DCAA5; color: var(--green); opacity: .7; }
+.opt.reveal .letter { background: #5DCAA5; color: #04342C; }
+
+.feedback {
+  margin-top: 12px; padding: 12px 16px;
+  border-radius: 10px; font-size: 13.5px;
+  line-height: 1.65; display: none;
+}
+.feedback.show { display: block; }
+.feedback.ok { background: var(--green-light); color: var(--green); border: 1px solid #5DCAA5; }
+.feedback.ko { background: var(--red-light); color: var(--red); border: 1px solid #F09595; }
+.feedback strong { font-weight: 600; }
+
+.btn-next {
+  margin-top: 1.25rem; padding: 11px 24px;
+  background: var(--text); color: var(--surface);
+  border: none; border-radius: 10px;
+  font-size: 14px; font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer; display: none;
+  transition: background .15s, transform .1s;
+}
+.btn-next.show { display: inline-flex; align-items: center; gap: 6px; }
+.btn-next:hover { background: #333; }
+.btn-next:active { transform: scale(.98); }
+
+/* SCORE */
+.score-wrap { text-align: center; padding: 1rem 0; }
+.score-student {
+  font-family: var(--mono); font-size: 12px;
+  color: var(--muted); margin-bottom: 1.5rem;
+  background: var(--surface2); border-radius: 8px;
+  padding: 8px 16px; display: inline-block;
+}
+.score-circle-wrap { margin: 1rem 0 1.5rem; }
+.score-circle {
+  width: 120px; height: 120px; border-radius: 50%;
+  margin: 0 auto 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  font-family: var(--serif);
+}
+.score-num { font-size: 2.5rem; line-height: 1; }
+.score-denom { font-size: 13px; font-family: var(--mono); opacity: .7; }
+.score-grade {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.score-msg { font-size: 14px; color: var(--muted); max-width: 380px; margin: 0 auto 1.5rem; }
+.score-bar-wrap { margin: 1.25rem 0; }
+.score-bar-label {
+  display: flex; justify-content: space-between;
+  font-size: 12px; font-family: var(--mono); color: var(--muted); margin-bottom: 6px;
+}
+.score-bar-track {
+  height: 8px; background: var(--border); border-radius: 4px; overflow: hidden;
+}
+.score-bar-fill {
+  height: 8px; border-radius: 4px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+/* CORRECTIONS */
+.corrections-title {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin-bottom: 1.25rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--border);
+}
+.correction-item {
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  margin-bottom: 1rem;
+}
+.correction-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.c-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.c-ok { background: var(--green-light); color: var(--green); }
+.c-ko { background: var(--red-light); color: var(--red); }
+.correction-q { font-size: 13px; font-weight: 500; flex: 1; line-height: 1.45; }
+.correction-body { padding: 14px 16px; font-size: 13.5px; }
+.corr-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+.corr-label {
+  font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 3px 8px; border-radius: 4px; flex-shrink: 0;
+  font-weight: 500; margin-top: 1px;
+}
+.corr-label.your { background: var(--red-light); color: var(--red); }
+.corr-label.good { background: var(--green-light); color: var(--green); }
+.corr-value { font-size: 13px; color: var(--text); }
+.corr-exp {
+  font-size: 13px; color: var(--muted);
+  background: var(--surface2); border-radius: 8px;
+  padding: 10px 12px; margin-top: 8px;
+  border-left: 3px solid var(--border);
+  line-height: 1.65;
+}
+.corr-exp strong { color: var(--text); font-weight: 500; }
+
+.all-correct-msg {
+  text-align: center; padding: 2rem 1rem;
+  color: var(--green);
+}
+.all-correct-msg .big { font-family: var(--serif); font-size: 1.6rem; font-style: italic; margin-bottom: 8px; }
+.all-correct-msg p { font-size: 14px; color: var(--muted); }
+
+.btn-retry {
+  margin-top: 1rem; padding: 11px 24px;
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 10px;
+  font-size: 14px; font-family: var(--sans);
+  cursor: pointer; transition: background .15s;
+}
+.btn-retry:hover { background: var(--border); }
+
+/* HIDDEN */
+.hidden { display: none !important; }
+
+/* PRINT hint */
+@media print {
+  .btn-retry, .btn-next, .btn-start { display: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <div class="eyebrow">Lycée — Formation Web</div>
+    <h1>CSS <em>display</em></h1>
+    <p>Évaluation — block · inline · inline-block</p>
+  </header>
+
+  <!-- STEP 1 : IDENTIFICATION -->
+  <div class="card" id="step-id">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Avant de commencer</div>
+      <div style="font-size:18px;font-family:var(--serif);font-weight:400">Identification de l'élève</div>
+    </div>
+    <div class="id-form">
+      <div class="field">
+        <label for="f-nom">Nom</label>
+        <input type="text" id="f-nom" placeholder="Dupont" autocomplete="family-name"/>
+        <div class="err-msg" id="e-nom">Veuillez saisir votre nom.</div>
+      </div>
+      <div class="field">
+        <label for="f-prenom">Prénom</label>
+        <input type="text" id="f-prenom" placeholder="Marie" autocomplete="given-name"/>
+        <div class="err-msg" id="e-prenom">Veuillez saisir votre prénom.</div>
+      </div>
+      <div class="field">
+        <label for="f-lycee">Lycée</label>
+        <input type="text" id="f-lycee" placeholder="Lycée Victor Hugo, Paris" autocomplete="organization"/>
+        <div class="err-msg" id="e-lycee">Veuillez saisir le nom de votre lycée.</div>
+      </div>
+      <button class="btn-start" onclick="startQuiz()">Commencer le QCM →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 : QUIZ -->
+  <div id="step-quiz" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="q-counter">Question 1 / 8</span>
+        <span id="score-live">Score : 0</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="pbar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="card" id="q-card"></div>
+  </div>
+
+  <!-- STEP 3 : RÉSULTATS -->
+  <div id="step-result" class="hidden">
+    <div class="card">
+      <div class="score-wrap">
+        <div class="score-student" id="student-label"></div>
+        <div class="score-circle-wrap">
+          <div class="score-circle" id="score-circle">
+            <span class="score-num" id="sc-num">0</span>
+            <span class="score-denom" id="sc-denom">/ 8</span>
+          </div>
+        </div>
+        <div class="score-grade" id="sc-grade"></div>
+        <div class="score-msg" id="sc-msg"></div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-label">
+            <span>0</span><span id="bar-score-label">0 / 8</span><span>8</span>
+          </div>
+          <div class="score-bar-track">
+            <div class="score-bar-fill" id="score-bar" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="corrections-card">
+      <div class="corrections-title">Corrections détaillées</div>
+      <div id="corrections-body"></div>
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn-retry" onclick="retryQuiz()">↺ Recommencer</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var student = {};
+var qi = 0, score = 0, results = [];
+var answered = false;
+
+var QS = [
+  {
+    notion: "Valeur par défaut",
+    q: "Quel est le display par défaut des balises &lt;div&gt;, &lt;p&gt; et &lt;h1&gt; ?",
+    code: null,
+    opts: ["inline", "block", "inline-block", "flex"],
+    correct: 1,
+    exp: "<strong>display: block</strong> est la valeur par défaut des éléments structurels comme &lt;div&gt;, &lt;p&gt;, &lt;h1&gt;… Ils occupent toute la largeur disponible et forcent un retour à la ligne avant et après eux."
+  },
+  {
+    notion: "inline — width/height ignorés",
+    q: "Ce code ne produit pas le résultat attendu. Quelle est la cause ?",
+    code: "span {\n  <span class='kw'>display</span>: <span class='val'>inline</span>;\n  <span class='kw'>width</span>: <span class='val'>300px</span>;  <span class='cmt'>/* pas d'effet ! */</span>\n  <span class='kw'>height</span>: <span class='val'>80px</span>;   <span class='cmt'>/* pas d'effet non plus */</span>\n}",
+    opts: [
+      "La syntaxe CSS est incorrecte",
+      "display: inline ignore les propriétés width et height",
+      "La balise span ne supporte pas le CSS",
+      "Il faut ajouter !important"
+    ],
+    correct: 1,
+    exp: "<strong>display: inline</strong> ignore totalement les propriétés <em>width</em> et <em>height</em>. L'élément prend uniquement la place de son contenu. Pour définir des dimensions, il faut utiliser <em>display: block</em> ou <em>display: inline-block</em>."
+  },
+  {
+    notion: "block — pleine largeur",
+    q: "Un élève définit width: 30% sur un élément block. Il est étonné que l'élément occupe toujours une ligne entière. Pourquoi ?",
+    code: ".boite {\n  <span class='kw'>display</span>: <span class='val'>block</span>;\n  <span class='kw'>width</span>: <span class='val'>30%</span>;\n  <span class='kw'>background</span>: <span class='val'>lightblue</span>;\n}",
+    opts: [
+      "display: block ignore la propriété width",
+      "display: block force toujours un saut de ligne, même si l'élément est petit",
+      "Il faut utiliser min-width au lieu de width",
+      "30% est une valeur invalide pour width"
+    ],
+    correct: 1,
+    exp: "<strong>display: block</strong> occupe toujours toute la largeur de la ligne, <em>même si l'élément lui-même est petit</em>. Il force un retour à la ligne avant et après lui. Width réduit bien la taille de l'élément, mais la ligne entière reste réservée. Pour avoir des éléments côte à côte, il faut flex, grid ou inline-block."
+  },
+  {
+    notion: "inline-block — côte à côte + taille",
+    q: "Tu veux créer 4 boutons de navigation alignés horizontalement, chacun avec une largeur précise de 140px. Quel display utiliser ?",
+    code: null,
+    opts: [
+      "display: block",
+      "display: inline",
+      "display: inline-block",
+      "display: table"
+    ],
+    correct: 2,
+    exp: "<strong>display: inline-block</strong> est la solution idéale ici : les éléments s'alignent côte à côte comme <em>inline</em>, mais acceptent une largeur définie comme <em>block</em>. C'est exactement le comportement voulu pour des boutons de navigation."
+  },
+  {
+    notion: "inline — marge verticale ignorée",
+    q: "L'élève constate que le margin-top ne fonctionne pas. Quelle est la raison ?",
+    code: "a {\n  <span class='kw'>display</span>: <span class='val'>inline</span>;\n  <span class='kw'>margin-top</span>: <span class='val'>30px</span>;  <span class='cmt'>/* ignoré ! */</span>\n  <span class='kw'>margin-left</span>: <span class='val'>10px</span>;  <span class='cmt'>/* celui-ci fonctionne */</span>\n}",
+    opts: [
+      "margin-top nécessite position: relative pour fonctionner",
+      "display: inline ignore les marges et padding verticaux",
+      "Il faut utiliser padding-top à la place de margin-top",
+      "La balise &lt;a&gt; ne supporte pas les marges"
+    ],
+    correct: 1,
+    exp: "<strong>display: inline</strong> ignore les marges et padding <em>verticaux</em> (top et bottom). Seules les marges horizontales (left et right) sont respectées. Pour des marges verticales, il faut passer à <em>block</em> ou <em>inline-block</em>."
+  },
+  {
+    notion: "inline — balises natives",
+    q: "Lesquelles de ces balises HTML ont display: inline par défaut ?",
+    code: null,
+    opts: [
+      "&lt;div&gt;, &lt;section&gt;, &lt;article&gt;",
+      "&lt;span&gt;, &lt;a&gt;, &lt;strong&gt;, &lt;em&gt;",
+      "&lt;p&gt;, &lt;h1&gt;, &lt;ul&gt;",
+      "&lt;form&gt;, &lt;table&gt;, &lt;header&gt;"
+    ],
+    correct: 1,
+    exp: "Les balises <strong>&lt;span&gt;, &lt;a&gt;, &lt;strong&gt;, &lt;em&gt;</strong> sont inline par défaut — elles s'insèrent dans le flux du texte. Les balises structurelles (&lt;div&gt;, &lt;p&gt;, &lt;h1&gt;…) sont block, et &lt;form&gt;, &lt;table&gt;, &lt;header&gt; sont également block par défaut."
+  },
+  {
+    notion: "inline vs inline-block",
+    q: "Quelle est la différence principale entre display: inline et display: inline-block ?",
+    code: null,
+    opts: [
+      "inline-block crée un saut de ligne, inline non",
+      "inline peut avoir une couleur de fond, inline-block non",
+      "inline-block respecte width et height, inline les ignore",
+      "Il n'y a aucune différence visible entre les deux"
+    ],
+    correct: 2,
+    exp: "Les deux valeurs placent les éléments côte à côte sans saut de ligne. La différence clé : <strong>inline-block respecte width, height et les marges/padding verticaux</strong>, tandis que <strong>inline les ignore</strong>. C'est cette différence qui détermine lequel utiliser."
+  },
+  {
+    notion: "Choisir le bon display",
+    q: "Quel display utiliser pour styliser un mot en couleur dans une phrase, sans modifier la mise en page du texte autour ?",
+    code: "La balise &lt;span&gt; dans cette phrase doit rester\n<span class='str'>dans le flux</span> du texte environnant.",
+    opts: [
+      "display: block — pour bien le séparer du reste",
+      "display: inline — pour rester dans le flux du texte",
+      "display: inline-block — pour pouvoir lui donner une taille",
+      "display: flex — pour plus de contrôle"
+    ],
+    correct: 1,
+    exp: "<strong>display: inline</strong> est exactement conçu pour ce cas : styliser un fragment de texte sans casser le flux. C'est le comportement natif de &lt;span&gt;, &lt;strong&gt;, &lt;em&gt;, etc. Si l'on avait besoin d'une taille fixe, on utiliserait inline-block."
+  }
+];
+
+var LETTERS = ['A','B','C','D'];
+
+function $(id){ return document.getElementById(id); }
+
+function startQuiz(){
+  var nom    = $('f-nom').value.trim();
+  var prenom = $('f-prenom').value.trim();
+  var lycee  = $('f-lycee').value.trim();
+  var ok = true;
+  [$('f-nom'),$('f-prenom'),$('f-lycee')].forEach(function(el){ el.classList.remove('err'); });
+  [$('e-nom'),$('e-prenom'),$('e-lycee')].forEach(function(el){ el.classList.remove('show'); });
+  if(!nom){   $('f-nom').classList.add('err');    $('e-nom').classList.add('show');    ok=false; }
+  if(!prenom){ $('f-prenom').classList.add('err'); $('e-prenom').classList.add('show'); ok=false; }
+  if(!lycee){ $('f-lycee').classList.add('err');  $('e-lycee').classList.add('show');  ok=false; }
+  if(!ok) return;
+  student = { nom:nom, prenom:prenom, lycee:lycee };
+  $('step-id').classList.add('hidden');
+  $('step-quiz').classList.remove('hidden');
+  qi=0; score=0; results=[];
+  renderQ();
+}
+
+function renderQ(){
+  if(qi >= QS.length){ showResult(); return; }
+  answered=false;
+  var q = QS[qi];
+  var pct = Math.round((qi/QS.length)*100);
+  $('pbar').style.width = pct+'%';
+  $('q-counter').textContent = 'Question '+(qi+1)+' / '+QS.length;
+  $('score-live').textContent = 'Score : '+score;
+
+  var codeHtml = q.code ? '<div class="code-block">'+q.code+'</div>' : '';
+  var optsHtml = q.opts.map(function(o,i){
+    return '<button class="opt" id="opt'+i+'" onclick="answer('+i+')">'
+      +'<span class="letter">'+LETTERS[i]+'</span>'+o+'</button>';
+  }).join('');
+
+  $('q-card').innerHTML =
+    '<div class="q-header">'
+      +'<span class="q-tag">Q'+(qi+1)+' / '+QS.length+'</span>'
+      +'<span class="notion-tag">'+q.notion+'</span>'
+    +'</div>'
+    +'<div class="q-text">'+q.q+'</div>'
+    +codeHtml
+    +'<div class="options">'+optsHtml+'</div>'
+    +'<div class="feedback" id="fb"></div>'
+    +'<button class="btn-next" id="btn-next" onclick="nextQ()">'
+      +(qi<QS.length-1 ? 'Question suivante →' : 'Voir mes résultats →')
+    +'</button>';
+}
+
+function answer(i){
+  if(answered) return;
+  answered=true;
+  var q=QS[qi];
+  document.querySelectorAll('.opt').forEach(function(b){ b.disabled=true; });
+  var ok=(i===q.correct);
+  if(ok){ $('opt'+i).classList.add('correct'); score++; }
+  else {
+    $('opt'+i).classList.add('wrong');
+    $('opt'+q.correct).classList.add('reveal');
+  }
+  results.push({ q:q.q, notion:q.notion, opts:q.opts, chosen:i, correct:q.correct, ok:ok, exp:q.exp });
+  var fb=$('fb');
+  fb.innerHTML=(ok?'<strong>Bonne réponse !</strong> ':'<strong>Pas tout à fait.</strong> ')+q.exp;
+  fb.className='feedback show '+(ok?'ok':'ko');
+  $('btn-next').classList.add('show');
+  $('score-live').textContent='Score : '+score;
+}
+
+function nextQ(){ qi++; renderQ(); }
+
+function showResult(){
+  $('step-quiz').classList.add('hidden');
+  $('step-result').classList.remove('hidden');
+
+  var n=QS.length, pct=Math.round(score/n*100);
+  $('student-label').textContent = student.prenom+' '+student.nom.toUpperCase()+' — '+student.lycee;
+  $('sc-num').textContent=score;
+  $('sc-denom').textContent='/ '+n;
+  $('bar-score-label').textContent=score+' / '+n;
+
+  var grade, msg, bg, fg;
+  if(pct===100){
+    grade='Excellent !'; msg='Score parfait ! Tu maîtrises parfaitement les valeurs de display CSS.';
+    bg='#E3F5EC'; fg='#1A6B45';
+  } else if(pct>=75){
+    grade='Très bien'; msg='Bon travail ! Quelques notions méritent encore un peu de révision — consulte les corrections ci-dessous.';
+    bg='#EBF0FF'; fg='#2B4FD4';
+  } else if(pct>=50){
+    grade='Peut mieux faire'; msg='Résultat moyen. Relis bien les corrections détaillées et reprends les exercices du cours.';
+    bg='#FEF3E2'; fg='#854F0B';
+  } else {
+    grade='À retravailler'; msg='Ce cours nécessite encore du travail. Reprends les animations du cours et relis tes notes avant de recommencer.';
+    bg='#FEE8E8'; fg='#991B1B';
+  }
+
+  var circle=$('score-circle');
+  circle.style.background=bg;
+  circle.style.color=fg;
+  circle.style.border='2px solid '+fg+'33';
+  $('sc-grade').textContent=grade;
+  $('sc-grade').style.color=fg;
+  $('sc-msg').textContent=msg;
+
+  var bar=$('score-bar');
+  bar.style.background=fg;
+  setTimeout(function(){ bar.style.width=pct+'%'; },100);
+
+  var errors=results.filter(function(r){ return !r.ok; });
+  var corrBody=$('corrections-body');
+
+  if(errors.length===0){
+    corrBody.innerHTML='<div class="all-correct-msg"><div class="big">Aucune erreur !</div><p>Toutes tes réponses sont correctes. Félicitations !</p></div>';
+    return;
+  }
+
+  corrBody.innerHTML='<p style="font-size:13px;color:var(--muted);margin-bottom:1rem">'+errors.length+' erreur'+(errors.length>1?'s':'')+' à corriger :</p>';
+
+  errors.forEach(function(r, idx){
+    var wrap=document.createElement('div');
+    wrap.className='correction-item';
+    wrap.innerHTML=
+      '<div class="correction-header">'
+        +'<div class="c-icon c-ko">✗</div>'
+        +'<div class="correction-q">'+r.notion+' — '+r.q+'</div>'
+      +'</div>'
+      +'<div class="correction-body">'
+        +'<div class="corr-row">'
+          +'<span class="corr-label your">Ta réponse</span>'
+          +'<span class="corr-value">'+LETTERS[r.chosen]+'. '+r.opts[r.chosen]+'</span>'
+        +'</div>'
+        +'<div class="corr-row">'
+          +'<span class="corr-label good">Bonne réponse</span>'
+          +'<span class="corr-value">'+LETTERS[r.correct]+'. '+r.opts[r.correct]+'</span>'
+        +'</div>'
+        +'<div class="corr-exp">'+r.exp+'</div>'
+      +'</div>';
+    corrBody.appendChild(wrap);
+  });
+}
+
+function retryQuiz(){
+  $('step-result').classList.add('hidden');
+  $('step-id').classList.remove('hidden');
+  $('f-nom').value='';
+  $('f-prenom').value='';
+  $('f-lycee').value='';
+}
+</script>
+</body>
+</html>
